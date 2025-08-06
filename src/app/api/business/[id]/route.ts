@@ -73,9 +73,10 @@ export async function PUT(
 // DELETE /api/business/[id]
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
@@ -83,7 +84,7 @@ export async function DELETE(
 
   try {
     await db.business.delete({
-      where: { id: params.id },
+      where: { id: id },
     });
 
     return NextResponse.json({ message: 'Negócio excluído com sucesso.' });

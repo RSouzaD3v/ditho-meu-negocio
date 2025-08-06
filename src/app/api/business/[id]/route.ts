@@ -1,9 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOption';
 import { db } from '@/lib/db';
 
-export async function GET(_: Request, { params }: { params: { id: string } }) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
@@ -21,7 +24,10 @@ export async function GET(_: Request, { params }: { params: { id: string } }) {
   return NextResponse.json(business);
 }
 
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
@@ -53,6 +59,9 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     return NextResponse.json(updated);
   } catch (err) {
     console.error('[PUT /api/business/:id]', err);
-    return NextResponse.json({ error: 'Erro ao atualizar negócio' }, { status: 500 });
+    return NextResponse.json(
+      { error: 'Erro ao atualizar negócio' },
+      { status: 500 }
+    );
   }
 }

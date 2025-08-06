@@ -3,17 +3,19 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOption';
 import { db } from '@/lib/db';
 
+// GET /api/business/[id]/documents
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }
 
-  const businessId = params.id;
+  const businessId = id;
 
   const docs = await db.document.findMany({
     where: { businessId },
@@ -23,18 +25,20 @@ export async function GET(
   return NextResponse.json(docs);
 }
 
+// POST /api/business/[id]/documents
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
+  const { id } = await params;
 
   if (!session?.user?.email) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });
   }
 
+  const businessId = id;
   const body = await req.json();
-  const businessId = params.id;
 
   const document = await db.document.create({
     data: {

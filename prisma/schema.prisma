@@ -1,0 +1,67 @@
+generator client {
+  provider = "prisma-client-js"
+  // output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(cuid())
+  name String?
+  email String @unique
+  image String?
+  phoneNumber String?
+  address String?
+  city String?
+  state String?
+  zipCode String?
+  country String?
+  password String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  businesses Business[]
+
+  @@index([email])
+}
+
+model Business {
+  id String @id @default(cuid())
+  name String
+  cnpj String? @unique
+  niche String?
+  logoUrl String?
+  description String?
+  address String?
+  city String?
+  state String?
+  zipCode String?
+  country String?
+  phoneNumber String?
+  email String?
+  website String?
+  ownerId String
+  owner User @relation(fields: [ownerId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  documents Document[]
+
+  @@index([ownerId])
+}
+
+model Document {
+  id String @id @default(cuid())
+  title String
+  content String?
+  fileUrl String?
+  businessId String
+  business Business @relation(fields: [businessId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([businessId])
+}

@@ -38,41 +38,60 @@ export default function NovoDocumentoPage() {
   }
 
   return (
-    <div className="max-w-xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Novo Documento</h1>
-        <p className="text-muted-foreground text-sm">Cadastre um novo documento para este negócio.</p>
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-8">
+      <div className="w-full max-w-xl rounded-xl bg-white shadow-lg p-8 space-y-8">
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-extrabold text-gray-900">Novo Documento</h1>
+          <p className="text-muted-foreground text-base">
+            Cadastre um novo documento para este negócio.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="title" className="font-semibold text-gray-700">
+              Título <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="title"
+              name="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              className="focus:ring-2 focus:ring-primary"
+              placeholder="Digite o título do documento"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="fileUrl" className="font-semibold text-gray-700">
+              Link do Arquivo <span className="text-gray-400">(opcional)</span>
+            </Label>
+            <Input
+              id="fileUrl"
+              name="fileUrl"
+              value={fileUrl}
+              onChange={(e) => setFileUrl(e.target.value)}
+              placeholder="https://exemplo.com/documento.pdf"
+              className="focus:ring-2 focus:ring-primary"
+            />
+          </div>
+
+          {error && (
+            <div className="rounded bg-red-100 text-red-700 px-4 py-2 text-sm">
+              {error}
+            </div>
+          )}
+
+          <Button
+            type="submit"
+            disabled={loading}
+            className="w-full mt-4 font-semibold text-base"
+          >
+            {loading ? 'Salvando...' : 'Salvar Documento'}
+          </Button>
+        </form>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="title">Título</Label>
-          <Input
-            id="title"
-            name="title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="fileUrl">Link do Arquivo (opcional)</Label>
-          <Input
-            id="fileUrl"
-            name="fileUrl"
-            value={fileUrl}
-            onChange={(e) => setFileUrl(e.target.value)}
-            placeholder="https://exemplo.com/documento.pdf"
-          />
-        </div>
-
-        {error && <p className="text-sm text-red-500">{error}</p>}
-
-        <Button type="submit" disabled={loading} className="w-full mt-4">
-          {loading ? 'Salvando...' : 'Salvar Documento'}
-        </Button>
-      </form>
     </div>
   );
 }

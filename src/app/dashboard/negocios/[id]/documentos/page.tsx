@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { DeleteDocumentBtn } from './_components/DeleteDocumentBtn';
+import { FileText } from 'lucide-react';
 
 interface Document {
   id: string;
@@ -29,43 +31,56 @@ export default function DocumentosPorNegocioPage() {
   }, [id]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Documentos do Negócio</h1>
-        <Button asChild>
+    <div className="space-y-8 max-w-2xl mx-auto py-8">
+      <div className="flex justify-between items-center border-b pb-4 mb-4">
+        <h1 className="text-3xl font-extrabold tracking-tight text-primary">
+          Documentos do Negócio
+        </h1>
+        <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white font-semibold">
           <Link href={`/dashboard/negocios/${id}/documentos/novo`}>
-            Novo Documento
+            + Novo Documento
           </Link>
         </Button>
       </div>
 
       {loading ? (
-        <p className="text-muted-foreground">Carregando...</p>
+        <div className="flex justify-center py-12">
+          <p className="text-muted-foreground animate-pulse">Carregando...</p>
+        </div>
       ) : documentos.length === 0 ? (
-        <p className="text-muted-foreground text-sm text-center">
-          Nenhum documento associado ainda.
-        </p>
+        <div className="flex flex-col items-center py-12">
+          <FileText className="w-12 h-12 text-muted-foreground mb-2" />
+          <p className="text-muted-foreground text-sm text-center">
+            Nenhum documento associado ainda.
+          </p>
+        </div>
       ) : (
-        <ul className="grid gap-3">
+        <ul className="space-y-4">
           {documentos.map((doc) => (
             <li
               key={doc.id}
-              className="border p-4 rounded-md flex justify-between items-center"
+              className="border rounded-lg p-5 flex justify-between items-center shadow-sm hover:shadow-md transition"
             >
-              <div>
-                <p className="font-medium">{doc.title}</p>
-                {doc.fileUrl && (
-                  <a
-                    href={doc.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs text-blue-600 underline"
-                  >
-                    Ver Arquivo
-                  </a>
-                )}
+              <div className="flex items-center gap-4">
+                <FileText className="w-6 h-6 text-blue-600" />
+                <div>
+                  <p className="font-semibold text-lg">{doc.title}</p>
+                  <div className="flex items-center gap-3 mt-1">
+                    {doc.fileUrl && (
+                      <a
+                        href={doc.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-600 underline hover:text-blue-800"
+                      >
+                        Ver Arquivo
+                      </a>
+                    )}
+                    <DeleteDocumentBtn id={doc.id} />
+                  </div>
+                </div>
               </div>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-muted-foreground whitespace-nowrap">
                 {new Date(doc.createdAt).toLocaleDateString()}
               </span>
             </li>

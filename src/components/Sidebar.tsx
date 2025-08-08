@@ -3,15 +3,16 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Home, Building, FileText, Settings } from 'lucide-react';
+import { Home, Building, Settings, Wrench, Stars } from 'lucide-react';
 
 export default function DashboardSidebar() {
   const pathname = usePathname();
 
   const links = [
     { href: '/dashboard', label: 'Início', icon: <Home className="w-4 h-4" /> },
+    { href: '/dashboard/ferramentas', label: 'Ferramentas', icon: <Wrench className="w-4 h-4" /> },
+    { href: '/dashboard/growth', label: 'Growth', icon: <Stars className="w-4 h-4" /> },
     { href: '/dashboard/negocios', label: 'Negócios', icon: <Building className="w-4 h-4" /> },
-    { href: '/dashboard/documentos', label: 'Documentos', icon: <FileText className="w-4 h-4" /> },
     { href: '/dashboard/configuracoes', label: 'Configurações', icon: <Settings className="w-4 h-4" /> },
   ];
 
@@ -27,8 +28,8 @@ export default function DashboardSidebar() {
             key={link.href}
             href={link.href}
             className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-all',
-              pathname === link.href ? 'bg-muted font-medium' : 'text-muted-foreground'
+              `flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted transition-all`,
+              pathname === link.href ? 'bg-muted font-medium text-black' : 'text-muted-foreground'
             )}
           >
             {link.icon}

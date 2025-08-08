@@ -48,69 +48,94 @@ export default function NegocioDetalhesPage() {
     if (id) fetchNegocio();
   }, [id, router]);
 
-  if (loading) return <p>Carregando...</p>;
+  if (loading) return <div className="flex justify-center items-center h-64"><span className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></span></div>;
 
   if (!negocio) {
-    return <p>Negócio não encontrado.</p>;
+    return <div className="text-center text-lg text-red-500">Negócio não encontrado.</div>;
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">{negocio.name}</h1>
-        <Button variant="outline" asChild>
-          <Link href={`/dashboard/negocios/${negocio.id}/editar`}>Editar</Link>
-        </Button>
-        <Button variant="secondary" asChild>
-            <Link href={`/dashboard/negocios/${negocio.id}/documentos`}>
-                Ver Documentos
-            </Link>
-        </Button>
+    <div className="max-w-3xl mx-auto mt-8 bg-white rounded-xl shadow-lg p-8 space-y-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold text-gray-900 mb-1">{negocio.name}</h1>
+          {negocio.niche && (
+            <span className="inline-block bg-blue-100 text-blue-800 text-xs px-3 py-1 rounded-full font-semibold">
+              {negocio.niche}
+            </span>
+          )}
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" asChild>
+            <Link href={`/dashboard/negocios/${negocio.id}/editar`}>Editar</Link>
+          </Button>
+          <Button variant="secondary" asChild>
+            <Link href={`/dashboard/negocios/${negocio.id}/documentos`}>Ver Documentos</Link>
+          </Button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {negocio.description && (
-          <div>
-            <strong>Descrição:</strong>
-            <p className="text-muted-foreground">{negocio.description}</p>
+          <div className="col-span-2">
+            <h2 className="text-lg font-semibold mb-1">Descrição</h2>
+            <p className="text-gray-600">{negocio.description}</p>
           </div>
         )}
         {negocio.cnpj && (
-          <p>
-            <strong>CNPJ:</strong> {negocio.cnpj}
-          </p>
+          <InfoItem label="CNPJ" value={negocio.cnpj} />
         )}
         {negocio.phoneNumber && (
-          <p>
-            <strong>Telefone:</strong> {negocio.phoneNumber}
-          </p>
+          <InfoItem label="Telefone" value={negocio.phoneNumber} />
         )}
         {negocio.email && (
-          <p>
-            <strong>Email:</strong> {negocio.email}
-          </p>
+          <InfoItem label="Email" value={negocio.email} />
         )}
         {negocio.website && (
-          <p>
-            <strong>Website:</strong> {negocio.website}
-          </p>
+          <InfoItem label="Website" value={
+            <a href={negocio.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+              {negocio.website}
+            </a>
+          } />
         )}
-        {negocio.address && (
-          <p>
-            <strong>Endereço:</strong> {negocio.address}, {negocio.city} - {negocio.state}
-          </p>
+        {(negocio.address || negocio.city || negocio.state) && (
+          <InfoItem
+            label="Endereço"
+            value={
+              <>
+                {negocio.address}
+                {negocio.address && (negocio.city || negocio.state) ? ', ' : ''}
+                {negocio.city}
+                {negocio.city && negocio.state ? ' - ' : ''}
+                {negocio.state}
+              </>
+            }
+          />
         )}
         {negocio.zipCode && (
-          <p>
-            <strong>CEP:</strong> {negocio.zipCode}
-          </p>
+          <InfoItem label="CEP" value={negocio.zipCode} />
         )}
         {negocio.country && (
-          <p>
-            <strong>País:</strong> {negocio.country}
-          </p>
+          <InfoItem label="País" value={negocio.country} />
         )}
+        <InfoItem
+          label="Criado em"
+          value={new Date(negocio.createdAt).toLocaleDateString('pt-BR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+          })}
+        />
       </div>
+    </div>
+  );
+}
+
+function InfoItem({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex flex-col mb-2">
+      <span className="text-sm font-medium text-gray-500">{label}</span>
+      <span className="text-base text-gray-800">{value}</span>
     </div>
   );
 }

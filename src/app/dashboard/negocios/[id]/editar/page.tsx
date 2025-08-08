@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 
 export default function EditarNegocioPage() {
   const { id } = useParams();
@@ -43,6 +44,7 @@ export default function EditarNegocioPage() {
     }
 
     if (id) fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -71,73 +73,82 @@ export default function EditarNegocioPage() {
     router.push(`/dashboard/negocios/${id}`);
   }
 
-  if (loading) return <p>Carregando...</p>;
+  if (loading) return <div className="flex justify-center items-center h-96"><p className="text-lg text-muted-foreground">Carregando...</p></div>;
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Editar Negócio</h1>
-        <p className="text-muted-foreground text-sm">Atualize os dados do negócio.</p>
-      </div>
+    <div className="flex justify-center items-center min-h-[80vh] bg-gradient-to-br from-slate-50 to-slate-200 py-8">
+      <Card className="w-full max-w-2xl shadow-lg border-0">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-3xl font-bold text-primary">Editar Negócio</CardTitle>
+          <CardDescription className="text-base text-muted-foreground">
+            Atualize os dados do negócio.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <Label htmlFor="name">Nome</Label>
+                <Input name="name" id="name" value={form.name} onChange={handleChange} required />
+              </div>
+              <div>
+                <Label htmlFor="cnpj">CNPJ</Label>
+                <Input name="cnpj" id="cnpj" value={form.cnpj} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="niche">Nicho</Label>
+                <Input name="niche" id="niche" value={form.niche} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="phoneNumber">Telefone</Label>
+                <Input name="phoneNumber" id="phoneNumber" value={form.phoneNumber} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="email">Email</Label>
+                <Input name="email" id="email" type="email" value={form.email} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="website">Website</Label>
+                <Input name="website" id="website" value={form.website} onChange={handleChange} />
+              </div>
+              <div className="md:col-span-2">
+                <Label htmlFor="description">Descrição</Label>
+                <Textarea name="description" id="description" value={form.description} onChange={handleChange} rows={3} />
+              </div>
+              <div>
+                <Label htmlFor="address">Endereço</Label>
+                <Input name="address" id="address" value={form.address} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="city">Cidade</Label>
+                <Input name="city" id="city" value={form.city} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="state">Estado</Label>
+                <Input name="state" id="state" value={form.state} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="zipCode">CEP</Label>
+                <Input name="zipCode" id="zipCode" value={form.zipCode} onChange={handleChange} />
+              </div>
+              <div>
+                <Label htmlFor="country">País</Label>
+                <Input name="country" id="country" value={form.country} onChange={handleChange} />
+              </div>
+            </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <Label>Nome</Label>
-            <Input name="name" value={form.name} onChange={handleChange} required />
-          </div>
-          <div>
-            <Label>CNPJ</Label>
-            <Input name="cnpj" value={form.cnpj} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Nicho</Label>
-            <Input name="niche" value={form.niche} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Telefone</Label>
-            <Input name="phoneNumber" value={form.phoneNumber} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Email</Label>
-            <Input name="email" type="email" value={form.email} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Website</Label>
-            <Input name="website" value={form.website} onChange={handleChange} />
-          </div>
-          <div className="md:col-span-2">
-            <Label>Descrição</Label>
-            <Textarea name="description" value={form.description} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Endereço</Label>
-            <Input name="address" value={form.address} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Cidade</Label>
-            <Input name="city" value={form.city} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Estado</Label>
-            <Input name="state" value={form.state} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>CEP</Label>
-            <Input name="zipCode" value={form.zipCode} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>País</Label>
-            <Input name="country" value={form.country} onChange={handleChange} />
-          </div>
-        </div>
+            {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
-
-        <Button type="submit" disabled={saving} className="w-full mt-4">
-          {saving ? 'Salvando...' : 'Salvar Alterações'}
-        </Button>
-      </form>
+            <Button
+              type="submit"
+              disabled={saving}
+              className="w-full mt-2 py-6 text-lg font-semibold rounded-lg shadow transition-all duration-150"
+            >
+              {saving ? 'Salvando...' : 'Salvar Alterações'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
